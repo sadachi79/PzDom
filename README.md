@@ -1,5 +1,7 @@
 # extended PzDom model
 
+11/26/20; a program for raw image added. 
+
 5/23/2020; Debugged for sorting of labels.
 
 ## About exPzDom.jl

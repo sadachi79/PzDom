@@ -459,4 +459,46 @@ pth = Gadfly.plot(pthresholddf, x=:"time", y=:"values", color=:"label", Geom.lin
 img = PNG("threshold1", 15cm, 10cm)
 draw(img, pth)
 
+slrdata = sort!(L, dims=2, by = x -> x[2])
+
+srdata = map(x -> x[1], slrdata)
+
+raw = idata
+
+jp=2
+while jp <= ncol
+    i=1
+    while i <= nrow
+        raw[i,jp] = srdata[i,jp-1]
+        i += 1
+    end
+    jp += 1
+end
+
+sl = append!([Symbol("raw")], slabels[1,1:end])
+
+rawdf = DataFrame(raw, Symbol.(sl))
+
+@show rawdf
+
+praw=[]
+jp=2
+while jp <= ncol
+    i=1
+    while i <= nrow
+        praw = cat(praw, cat(cat(rawdf[i,1], rawdf[i,jp], dims=2), sl[jp], dims=2), dims=1)
+        i += 1
+    end
+    jp += 1
+end
+
+pl = append!(append!([Symbol("time")], [Symbol("values")]), [Symbol("label")])
+
+prawdf = DataFrame(praw, Symbol.(pl))
+
+pr = Gadfly.plot(prawdf, x=:"time", y=:"values", color=:"label", Geom.line, Geom.point, Guide.xlabel("time"), Guide.ylabel("raw"))
+
+img = PNG("raw1", 15cm, 10cm)
+draw(img, pr)
+
 
